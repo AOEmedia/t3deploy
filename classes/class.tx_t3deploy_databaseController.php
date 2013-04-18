@@ -47,7 +47,7 @@ class tx_t3deploy_databaseController {
 	 */
 	public function __construct() {
 
-		if ( t3lib_div::int_from_ver(TYPO3_version) < 4007001) {
+		if (is_callable('t3lib_div::int_from_ver') && t3lib_div::int_from_ver(TYPO3_version) < 4007001) {
 			$this->install = t3lib_div::makeInstance('t3lib_install');
 		} else {
 			$this->install = t3lib_div::makeInstance('t3lib_install_Sql');

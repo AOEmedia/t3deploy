@@ -8,8 +8,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * General CLI dispatcher for the t3deploy extension.
  *
@@ -62,7 +60,7 @@ class tx_t3deploy_dispatch extends \TYPO3\CMS\Core\Controller\CommandLineControl
 	 */
 	public function getClassInstance($className) {
 		if (!isset($this->classInstances[$className])) {
-			$this->classInstances[$className] = GeneralUtility::makeInstance($className);
+			$this->classInstances[$className] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($className);
 		}
 		return $this->classInstances[$className];
 	}

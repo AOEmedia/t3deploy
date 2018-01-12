@@ -2,13 +2,11 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2016 AOE GmbH <dev@aoe.com>
+*  (c) 2018 AOE GmbH <dev@aoe.com>
 *  All rights reserved
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Controller that handles database actions of the t3deploy process inside TYPO3.
@@ -52,11 +50,11 @@ class tx_t3deploy_databaseController {
 	 */
 	public function __construct() {
 		/** @var TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
-		$objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
 
-		$this->schemaMigrationService = $objectManager->get('TYPO3\\CMS\\Install\\Service\\SqlSchemaMigrationService');
-		$this->expectedSchemaService = $objectManager->get('TYPO3\\CMS\\Install\\Service\\SqlExpectedSchemaService');
-		$this->categoryRegistry = $objectManager->get('TYPO3\\CMS\\Core\\Category\\CategoryRegistry');
+		$this->schemaMigrationService = $objectManager->get(\TYPO3\CMS\Install\Service\SqlSchemaMigrationService::class);
+		$this->expectedSchemaService = $objectManager->get(\TYPO3\CMS\Install\Service\SqlExpectedSchemaService::class);
+		$this->categoryRegistry = $objectManager->get(\TYPO3\CMS\Core\Category\CategoryRegistry::class);
 
 		$this->setConsideredTypes($this->getUpdateTypes());
 	}
@@ -366,7 +364,7 @@ class tx_t3deploy_databaseController {
 	 * @return array
 	 */
 	protected function getUpdateTypes() {
-		return GeneralUtility::trimExplode(',', self::UpdateTypes_List, TRUE);
+		return \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', self::UpdateTypes_List, TRUE);
 	}
 
 	/**
@@ -375,7 +373,7 @@ class tx_t3deploy_databaseController {
 	 * @return array
 	 */
 	protected function getRemoveTypes() {
-		return GeneralUtility::trimExplode(',', self::RemoveTypes_list, TRUE);
+		return \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', self::RemoveTypes_list, TRUE);
 	}
 
 	/**

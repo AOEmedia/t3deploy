@@ -395,9 +395,16 @@ class DatabaseController
      */
     protected function getAllRawStructureDefinitions()
     {
+        $packageStates = include(PATH_typo3conf .'PackageStates.php');
+
+        $tmp = $GLOBALS['TYPO3_LOADED_EXT'];
+
+        $GLOBALS['TYPO3_LOADED_EXT'] = array_merge($packageStates['packages'], $GLOBALS['TYPO3_LOADED_EXT']);
 
         $expectedSchemaString = $this->expectedSchemaService->getTablesDefinitionString(true);
         $rawDefinitions = $this->schemaMigrationService->getStatementArray($expectedSchemaString, true);
+
+        $GLOBALS['TYPO3_LOADED_EXT'] = $tmp;
 
         return $rawDefinitions;
     }

@@ -1,19 +1,42 @@
 <?php
+namespace Aoe\T3deploy\Controller;
+
 /***************************************************************
-*  Copyright notice
-*
-*  (c) 2018 AOE GmbH <dev@aoe.com>
-*  All rights reserved
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+ *  Copyright notice
+ *
+ *  (c) 2018 AOE GmbH <dev@aoe.com>
+ *
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
+
+use TYPO3\CMS\Core\Category\CategoryRegistry;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Install\Service\SqlExpectedSchemaService;
+use TYPO3\CMS\Install\Service\SqlSchemaMigrationService;
 
 /**
  * Controller that handles database actions of the t3deploy process inside TYPO3.
  *
  * @package t3deploy
  */
-class tx_t3deploy_databaseController
+class DatabaseController
 {
     /*
      * List of all possible update types:
@@ -49,12 +72,12 @@ class tx_t3deploy_databaseController
      */
     public function __construct()
     {
-        /** @var TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
-        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
+        /** @var ObjectManager $objectManager */
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
-        $this->schemaMigrationService = $objectManager->get(\TYPO3\CMS\Install\Service\SqlSchemaMigrationService::class);
-        $this->expectedSchemaService = $objectManager->get(\TYPO3\CMS\Install\Service\SqlExpectedSchemaService::class);
-        $this->categoryRegistry = $objectManager->get(\TYPO3\CMS\Core\Category\CategoryRegistry::class);
+        $this->schemaMigrationService = $objectManager->get(SqlSchemaMigrationService::class);
+        $this->expectedSchemaService = $objectManager->get(SqlExpectedSchemaService::class);
+        $this->categoryRegistry = $objectManager->get(CategoryRegistry::class);
 
         $this->setConsideredTypes($this->getUpdateTypes());
     }
@@ -116,13 +139,13 @@ class tx_t3deploy_databaseController
             $dumpFileName = $arguments['--dump-file'][0];
 
             if (!file_exists(dirname($dumpFileName))) {
-                throw new InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(sprintf(
                     'directory %s does not exist or is not readable', dirname($dumpFileName)
                 ));
             }
 
             if (file_exists($dumpFileName) && !is_writable($dumpFileName)) {
-                throw new InvalidArgumentException(sprintf(
+                throw new \InvalidArgumentException(sprintf(
                     'file %s is not writable', $dumpFileName
                 ));
             }
@@ -248,7 +271,7 @@ class tx_t3deploy_databaseController
      * performs some basic checks on the database changes to identify most common errors
      *
      * @param string $changes the changes to check
-     * @throws Exception if the file seems to contain bad data
+     * @throws \Exception if the file seems to contain bad data
      */
     protected function checkChangesSyntax($changes)
     {
@@ -430,7 +453,8 @@ class tx_t3deploy_databaseController
      * @param $statement
      * @return bool
      */
-    protected function isDropKeyStatement($statement) {
+    protected function isDropKeyStatement($statement)
+    {
         return strpos($statement, ' DROP ') !== false && strpos($statement, ' KEY') !== false;
     }
 }

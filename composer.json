@@ -22,9 +22,9 @@
         "t3deploy": "self.version"
     },
     "autoload": {
-        "classmap": [
-            "Classes"
-        ]
+        "psr-4": {
+            "Aoe\\T3deploy\\": "Classes"
+        }
     },
     "config": {
         "vendor-dir": ".Build/vendor",
@@ -48,12 +48,16 @@
             "[ -L .Build/Web/typo3conf/ext/t3deploy ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3deploy"
         ],
         "test:unit": [
-            "[ -e '.Build/bin/phpunit' ] || composer update",
+            "[ -e '.Build/bin/phpunit' ] || composer cleanupdate",
             "TYPO3_PATH_ROOT=$(pwd)/.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
         ],
         "test:functional": [
-            "[ -e '.Build/bin/phpunit' ] || composer update",
+            "[ -e '.Build/bin/phpunit' ] || composer cleanupdate",
             "TYPO3_PATH_ROOT=$(pwd)/.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
+        ],
+        "cleanupdate": [
+            "rm -rf ./.Build",
+            "composer update"
         ]
     },
     "keywords": [

@@ -1,4 +1,6 @@
 <?php
+namespace Aoe\t3deploy\Tests\Unit;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -14,7 +16,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  * Test case for class tx_t3deploy_dispatch.
  *
  * @package t3deploy
- * @author Oliver Hader <oliver.hader@aoe.com>
  */
 class DispatchTest extends UnitTestCase
 {
@@ -27,7 +28,7 @@ class DispatchTest extends UnitTestCase
     protected $testClassName;
 
     /**
-     * @var tx_t3deploy_dispatch
+     * @var \tx_t3deploy_dispatch
      */
     protected $dispatch;
 
@@ -43,7 +44,7 @@ class DispatchTest extends UnitTestCase
         $this->testClassName = uniqid('testClassName');
         eval('class ' . self::ClassPrefix . $this->testClassName . self::ClassSuffix . ' {}');
 
-        $this->dispatch = new tx_t3deploy_dispatch();
+        $this->dispatch = new \tx_t3deploy_dispatch();
     }
 
     /**

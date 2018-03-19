@@ -3,6 +3,11 @@
     "description": "t3deploy TYPO3 dispatcher",
     "type": "typo3-cms-extension",
     "license": "GPL-3.0",
+    "support": {
+        "email": "dev@aoe.com",
+        "issues": "https://github.com/AOEpeople/t3deploy/issues",
+        "source": "https://github.com/AOEpeople/t3deploy"
+    },
     "authors": [
         {
             "name": "AOE GmbH",
@@ -14,24 +19,16 @@
         "nimut/testing-framework": "^2.0.0"
     },
     "replace": {
-        "t3deploy": "*"
+        "t3deploy": "self.version"
     },
     "autoload": {
         "classmap": [
             "Classes"
         ]
     },
-    "autoload-dev": {
-        "psr-4": {
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/Web/typo3/sysext/core/Tests/"
-        }
-    },
     "config": {
         "vendor-dir": ".Build/vendor",
-        "bin-dir": ".Build/bin",
-        "preferred-install": {
-            "typo3/cms": "source"
-        }
+        "bin-dir": ".Build/bin"
     },
     "extra": {
         "typo3/cms": {
@@ -49,6 +46,14 @@
         "post-autoload-dump": [
             "mkdir -p .Build/Web/typo3conf/ext/",
             "[ -L .Build/Web/typo3conf/ext/t3deploy ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/t3deploy"
+        ],
+        "test:unit": [
+            "[ -e '.Build/bin/phpunit' ] || composer update",
+            "TYPO3_PATH_ROOT=$(pwd)/.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit"
+        ],
+        "test:functional": [
+            "[ -e '.Build/bin/phpunit' ] || composer update",
+            "TYPO3_PATH_ROOT=$(pwd)/.Build/Web .Build/bin/phpunit --colors -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml Tests/Functional"
         ]
     },
     "keywords": [

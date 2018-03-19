@@ -1,4 +1,6 @@
 <?php
+namespace Aoe\t3deploy\Tests\Functional;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -15,7 +17,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Test case for class tx_t3deploy_databaseController.
  *
  * @package t3deploy
- * @author Oliver Hader <oliver.hader@aoe.com>
  */
 class DatabaseControllerTest extends FunctionalTestCase
 {
@@ -44,7 +45,7 @@ class DatabaseControllerTest extends FunctionalTestCase
         parent::setUp();
 
         $expectedSchemaServiceMock = $this->getMock(
-            'TYPO3\\CMS\\Install\\Service\\SqlExpectedSchemaService',
+            \TYPO3\CMS\Install\Service\SqlExpectedSchemaService::class,
             ['getTablesDefinitionString']
         );
 
@@ -52,7 +53,7 @@ class DatabaseControllerTest extends FunctionalTestCase
             file_get_contents(PATH_tx_t3deploy . 'Tests/Fixtures/testextension/ext_tables_fixture.sql')
         );
 
-        $this->controller = new tx_t3deploy_databaseController();
+        $this->controller = new \tx_t3deploy_databaseController();
         $this->inject($this->controller, 'expectedSchemaService', $expectedSchemaServiceMock);
     }
 

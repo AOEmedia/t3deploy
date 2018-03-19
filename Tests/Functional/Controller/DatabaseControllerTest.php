@@ -27,6 +27,7 @@ namespace Aoe\T3deploy\Tests\Functional;
 
 use Aoe\T3deploy\Controller\DatabaseController;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Service\SqlExpectedSchemaService;
 
@@ -64,7 +65,7 @@ class DatabaseControllerTest extends FunctionalTestCase
         $expectedSchemaServiceMock = $this->getMock(SqlExpectedSchemaService::class, ['getTablesDefinitionString']);
 
         $expectedSchemaServiceMock->expects($this->any())->method('getTablesDefinitionString')->with(true)->willReturn(
-            file_get_contents(PATH_tx_t3deploy . 'Tests/Fixtures/testextension/ext_tables_fixture.sql')
+            file_get_contents(ExtensionManagementUtility::extPath('t3deploy') . 'Tests/Fixtures/testextension/ext_tables_fixture.sql')
         );
 
         $this->controller = new DatabaseController();
@@ -217,7 +218,7 @@ class DatabaseControllerTest extends FunctionalTestCase
      */
     public function doesUpdateStructureActionDumpChangesToFile()
     {
-        $testDumpFile = PATH_tx_t3deploy . 'Tests/test_dumpfile.sql';
+        $testDumpFile = ExtensionManagementUtility::extPath('t3deploy') . 'Tests/test_dumpfile.sql';
         if (file_exists($testDumpFile)) {
             unlink($testDumpFile);
         }

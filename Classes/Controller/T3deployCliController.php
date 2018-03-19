@@ -1,5 +1,5 @@
 <?php
-namespace Aoe\T3deploy;
+namespace Aoe\T3deploy\Controller;
 
 /***************************************************************
  *  Copyright notice
@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @package t3deploy
  */
-class Dispatcher extends CommandLineController
+class T3deployCliController extends CommandLineController
 {
     const ExtKey = 't3deploy';
     const Mask_ClassName = 'Aoe\\T3deploy\\Controller\\%sController';

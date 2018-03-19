@@ -25,8 +25,8 @@ namespace Aoe\T3deploy\Tests\Unit;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Aoe\T3deploy\Controller\T3deployCliController;
 use Aoe\T3deploy\Controller\DatabaseController;
-use Aoe\T3deploy\Dispatcher;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
@@ -34,12 +34,12 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
  *
  * @package t3deploy
  */
-class DispatcherTest extends UnitTestCase
+class T3DeployCliControllerTest extends UnitTestCase
 {
     /**
-     * @var Dispatcher
+     * @var T3deployCliController
      */
-    protected $dispatcher;
+    protected $t3deployCliController;
 
     /**
      * Sets up the test cases.
@@ -49,7 +49,7 @@ class DispatcherTest extends UnitTestCase
     public function setUp()
     {
         $_SERVER['argv'] = [];
-        $this->dispatcher = new Dispatcher();
+        $this->t3deployCliController = new T3deployCliController();
     }
 
     /**
@@ -59,7 +59,7 @@ class DispatcherTest extends UnitTestCase
      */
     public function tearDown()
     {
-        unset($this->dispatcher);
+        unset($this->t3deployCliController);
         parent::tearDown();
     }
 
@@ -81,8 +81,8 @@ class DispatcherTest extends UnitTestCase
         $testMock = $this->getMock(DatabaseController::class, ['updateStructureAction'], [], '', false);
         $testMock->expects($this->once())->method('updateStructureAction')->willReturn('method called');
 
-        $this->dispatcher->setCliArguments($cliArguments);
-        $this->dispatcher->setClassInstance(DatabaseController::class, $testMock);
-        $this->assertEquals('method called', $this->dispatcher->dispatch());
+        $this->t3deployCliController->setCliArguments($cliArguments);
+        $this->t3deployCliController->setClassInstance(DatabaseController::class, $testMock);
+        $this->assertEquals('method called', $this->t3deployCliController->dispatch());
     }
 }

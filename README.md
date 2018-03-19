@@ -6,6 +6,7 @@ TYPO3 dispatcher for database related operations.
 ## Build information
 [![Build Status](https://travis-ci.org/AOEpeople/t3deploy.svg?branch=master)](https://travis-ci.org/AOEpeople/t3deploy)
 [![Code Coverage](https://scrutinizer-ci.com/g/AOEpeople/t3deploy/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/t3deploy/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AOEpeople/t3deploy/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/AOEpeople/t3deploy/?branch=master)
 
 ## Usage
 
@@ -40,7 +41,7 @@ php typo3/cli_dispatch.phpsh t3deploy database updateStructure --remove --verbos
 
 ## Requirements
 
-TYPO3 6.2+
+TYPO3 7.6+
 
 ## Authors
 

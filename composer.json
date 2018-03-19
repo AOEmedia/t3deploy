@@ -14,9 +14,6 @@
             "email": "dev@aoe.com"
         }
     ],
-    "require": {
-        "typo3/cms-core": ">=7.6.0,<8.7.99"
-    },
     "require-dev": {
         "typo3/cms": "^7.6",
         "nimut/testing-framework": "^2.0.0"

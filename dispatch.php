@@ -14,4 +14,3 @@ if (!defined ('TYPO3_cliMode')) {
 
 require_once PATH_tx_t3deploy . 'Classes/class.tx_t3deploy_dispatch.php';
 echo \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3deploy_dispatch')->dispatch() . PHP_EOL;
-z

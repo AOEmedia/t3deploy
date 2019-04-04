@@ -4,7 +4,7 @@ return [
         \AOE\T3Deploy\Command\T3DeployCommandController::class
     ],
     'runLevels' => [
-        'crawlerCommand' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL
+        'T3DeployCommand' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL
     ],
     'bootingSteps' => []
 ];

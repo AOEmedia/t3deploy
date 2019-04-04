@@ -35,7 +35,7 @@ class SqlStatementUtility
      * @return bool
      */
     public static function isDropKeyStatement($statement) {
-        return strpos($statement, ' DROP ') !== FALSE && strpos($statement, ' KEY') !== FALSE;
+        return strpos($statement, ' DROP ') !== false && strpos($statement, ' KEY') !== false;
     }
 
     /**
@@ -46,12 +46,12 @@ class SqlStatementUtility
      */
     public static function sortStatements($statements) {
         $newStatements = [];
-        foreach($statements as $key=>$statement) {
+        foreach($statements as $key => $statement) {
             if(SqlStatementUtility::isDropKeyStatement($statement)) {
                 $newStatements[$key] = $statement;
             }
         }
-        foreach($statements as $key=>$statement) {
+        foreach($statements as $key => $statement) {
             // writing the statement again, does not change its position
             // this saves a condition check
             $newStatements[$key] = $statement;
@@ -67,10 +67,17 @@ class SqlStatementUtility
      * @throws \Exception if the file seems to contain bad data
      */
     public static function checkChangesSyntax($changes) {
-        if (strlen($changes) < 10) return;
+        if (strlen($changes) < 10) {
+            return;
+        }
         $checked = substr(ltrim($changes), 0, 10);
         if ($checked !== strtoupper(trim($checked))) {
-            throw new \Exception('Changes for schema_up seem to contain weird data, it starts with this:'.PHP_EOL.substr($changes, 0, 200).PHP_EOL.'=================================='.PHP_EOL.'If the file is ok, please add your conditions to file res/extensions/t3deploy/classes/class.tx_t3deploy_databaseController.php in t3deploy.');
+            throw new \Exception(
+                'Changes for schema_up seem to contain weird data, it starts with this:' .
+                PHP_EOL . substr($changes, 0, 200) . PHP_EOL .
+                '==================================' .
+                PHP_EOL . 'If the file is ok, please add your conditions to file 
+                res/extensions/t3deploy/classes/class.tx_t3deploy_databaseController.php in t3deploy.');
         }
     }
 }

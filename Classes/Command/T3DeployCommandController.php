@@ -1,5 +1,4 @@
 <?php
-
 namespace AOE\T3Deploy\Command;
 
 /***************************************************************
@@ -51,6 +50,7 @@ class T3DeployCommandController extends CommandController
      * @var array
      */
     protected $consideredTypes = [];
+
     /**
      * @var SqlSchemaMigrationService
      */
@@ -137,7 +137,6 @@ class T3DeployCommandController extends CommandController
         file_put_contents($dumpFile, $result);
         $result = sprintf("Output written to %s\n", $dumpFile);
 
-
         if ($execute) {
             $result .= ($result ? PHP_EOL : '') . $this->executeUpdateStructureUntilNoMoreChanges($arguments, $allowKeyModifications);
         }
@@ -185,7 +184,7 @@ class T3DeployCommandController extends CommandController
      * @param array $arguments Optional arguments passed to this action
      * @param boolean $allowKeyModifications Whether to allow key modifications
      *
-     * @throws
+     * @throws \Exception
      *
      * @return string
      */
@@ -260,9 +259,8 @@ class T3DeployCommandController extends CommandController
      * @param boolean $allowKeyModifications Whether to allow key modifications
      * @return array The database statements to update the structure
      */
-    private function getStructureDifferencesForUpdate($allowKeyModifications = FALSE)
+    private function getStructureDifferencesForUpdate($allowKeyModifications = false)
     {
-
         $differences = $this->schemaMigrationService->getDatabaseExtra(
             $this->getDefinedFieldDefinitions(),
             $this->schemaMigrationService->getFieldDefinitions_database()
@@ -286,6 +284,7 @@ class T3DeployCommandController extends CommandController
         $content = $this->schemaMigrationService->getFieldDefinitions_fileContent(
             implode(chr(10), $this->getAllRawStructureDefinitions()) . $cacheTables
         );
+
         return $content;
     }
 
@@ -296,15 +295,14 @@ class T3DeployCommandController extends CommandController
      */
     private function getAllRawStructureDefinitions()
     {
-
         $packageStates = include(PATH_typo3conf . 'PackageStates.php');
 
         $tmp = $GLOBALS['TYPO3_LOADED_EXT'];
 
         $GLOBALS['TYPO3_LOADED_EXT'] = array_merge($packageStates['packages'], $GLOBALS['TYPO3_LOADED_EXT']);
 
-        $expectedSchemaString = $this->expectedSchemaService->getTablesDefinitionString(TRUE);
-        $rawDefinitions = $this->schemaMigrationService->getStatementArray($expectedSchemaString, TRUE);
+        $expectedSchemaString = $this->expectedSchemaService->getTablesDefinitionString(true);
+        $rawDefinitions = $this->schemaMigrationService->getStatementArray($expectedSchemaString, true);
 
         $GLOBALS['TYPO3_LOADED_EXT'] = $tmp;
 
@@ -339,7 +337,7 @@ class T3DeployCommandController extends CommandController
         if (isset($differences[$type])) {
             foreach ($differences[$type] as $table => $information) {
                 $isException = ($exception && isset($information[$exception]) && $information[$exception]);
-                if (isset($information[$subKey]) && $isException === FALSE) {
+                if (isset($information[$subKey]) && $isException === false) {
                     unset($differences[$type][$table][$subKey]);
                 }
             }
@@ -393,7 +391,7 @@ class T3DeployCommandController extends CommandController
      */
     private function getRemoveTypes()
     {
-        return GeneralUtility::trimExplode(',', self::RemoveTypes_list, TRUE);
+        return GeneralUtility::trimExplode(',', self::RemoveTypes_list, true);
     }
 
     /**
@@ -406,7 +404,7 @@ class T3DeployCommandController extends CommandController
      * @param boolean $allowKeyModifications Whether to allow key modifications
      * @return array The database statements to update the structure
      */
-    protected function getStructureDifferencesForRemoval($allowKeyModifications = FALSE)
+    protected function getStructureDifferencesForRemoval($allowKeyModifications = false)
     {
         $differences = $this->schemaMigrationService->getDatabaseExtra(
             $this->schemaMigrationService->getFieldDefinitions_database(),
@@ -427,7 +425,7 @@ class T3DeployCommandController extends CommandController
      */
     private function getUpdateTypes()
     {
-        return GeneralUtility::trimExplode(',', self::UpdateTypes_List, TRUE);
+        return GeneralUtility::trimExplode(',', self::UpdateTypes_List, true);
     }
 
 }

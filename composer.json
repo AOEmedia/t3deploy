@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">= 5.5, < 7.3",
+        "php": ">= 7.0, < 7.3",
         "typo3/cms-core": ">=7.6.0",
         "helhum/typo3-console": ">=4.0"
     },

@@ -38,11 +38,11 @@ use TYPO3\CMS\Install\Service\SqlSchemaMigrationService;
 class T3DeployCommandController extends CommandController
 {
     /**
-	 * List of all possible update types:
-	 *	+ add, change, drop, create_table, change_table, drop_table, clear_table
-	 * List of all sensible update types:
-	 *	+ add, change, create_table, change_table
-	 */
+     * List of all possible update types:
+     *    + add, change, drop, create_table, change_table, drop_table, clear_table
+     * List of all sensible update types:
+     *    + add, change, create_table, change_table
+     */
     const UpdateTypes_List = 'add,change,create_table,change_table';
     const RemoveTypes_list = 'drop,drop_table,clear_table';
 
@@ -104,12 +104,18 @@ class T3DeployCommandController extends CommandController
      * @param bool $verbose
      * @param string $excludes
      *
+     * @return string
      * @throws \InvalidArgumentException
      *
-     * @return string
      */
-    public function updateStructureCommand($execute = false, $remove = false, $dropKeys = false, $dumpFile = 'structure.sql', $verbose = false, $excludes = '')
-    {
+    public function updateStructureCommand(
+        $execute = false,
+        $remove = false,
+        $dropKeys = false,
+        $dumpFile = 'structure.sql',
+        $verbose = false,
+        $excludes = ''
+    ) {
         $arguments = [
             'execute' => $execute,
             'remove' => $remove,
@@ -150,10 +156,10 @@ class T3DeployCommandController extends CommandController
      * The install tool sometimes relies on the user hitting the "update" button multiple times. This method
      * encapsulates that behaviour.
      *
-     * @see executeUpdateStructure()
      * @param array $arguments
      * @param bool $allowKeyModifications
      * @return string
+     * @see executeUpdateStructure()
      */
     private function executeUpdateStructureUntilNoMoreChanges(array $arguments, $allowKeyModifications = false)
     {
@@ -184,9 +190,9 @@ class T3DeployCommandController extends CommandController
      * @param array $arguments Optional arguments passed to this action
      * @param boolean $allowKeyModifications Whether to allow key modifications
      *
+     * @return string
      * @throws \Exception
      *
-     * @return string
      */
     private function executeUpdateStructure($arguments, $allowKeyModifications = false)
     {

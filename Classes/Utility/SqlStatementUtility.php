@@ -1,6 +1,4 @@
 <?php
-namespace AOE\T3Deploy\Utility;
-
 /***************************************************************
  *  Copyright notice
  *
@@ -25,6 +23,8 @@ namespace AOE\T3Deploy\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+namespace AOE\T3Deploy\Utility;
+
 class SqlStatementUtility
 {
 
@@ -34,7 +34,8 @@ class SqlStatementUtility
      * @param $statement
      * @return bool
      */
-    public static function isDropKeyStatement($statement) {
+    public static function isDropKeyStatement($statement)
+    {
         return strpos($statement, ' DROP ') !== false && strpos($statement, ' KEY') !== false;
     }
 
@@ -44,14 +45,15 @@ class SqlStatementUtility
      * @param array $statements
      * @return array
      */
-    public static function sortStatements($statements) {
+    public static function sortStatements($statements)
+    {
         $newStatements = [];
-        foreach($statements as $key => $statement) {
-            if(SqlStatementUtility::isDropKeyStatement($statement)) {
+        foreach ($statements as $key => $statement) {
+            if (SqlStatementUtility::isDropKeyStatement($statement)) {
                 $newStatements[$key] = $statement;
             }
         }
-        foreach($statements as $key => $statement) {
+        foreach ($statements as $key => $statement) {
             // writing the statement again, does not change its position
             // this saves a condition check
             $newStatements[$key] = $statement;
@@ -66,7 +68,8 @@ class SqlStatementUtility
      * @param string $changes the changes to check
      * @throws \Exception if the file seems to contain bad data
      */
-    public static function checkChangesSyntax($changes) {
+    public static function checkChangesSyntax($changes)
+    {
         if (strlen($changes) < 10) {
             return;
         }

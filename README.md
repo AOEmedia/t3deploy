@@ -40,7 +40,7 @@ php typo3/cli_dispatch.phpsh t3deploy database updateStructure --remove --verbos
 
 ## Requirements
 
-TYPO3 6.2+
+TYPO3 7.6+
 
 ## Authors
 
@@ -50,5 +50,5 @@ See also the list of [contributors](https://github.com/AOEpeople/t3deploy/contri
 
 ## Copyright / License
 
-Copyright: (c) 2012 - 2018, AOE GmbH
+Copyright: (c) 2012 - 2019, AOE GmbH
 License: GPLv3, <http://www.gnu.org/licenses/gpl-3.0.en.html>

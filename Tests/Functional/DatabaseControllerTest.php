@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -23,7 +23,11 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Types\Type as ColumnTypes;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Service\SqlExpectedSchemaService;
 
@@ -98,10 +102,12 @@ class DatabaseControllerTest extends FunctionalTestCase
         $result = $this->controller->updateStructureAction($arguments);
 
         // Assert that nothing has been created, this is just for reporting:
-        $tables = $GLOBALS['TYPO3_DB']->admin_get_tables();
-        $pagesFields = $GLOBALS['TYPO3_DB']->admin_get_fields('pages');
+        $tables = $this->getTables();
+        $pagesFields = $this->getTableColumns('pages');
+
         $this->assertFalse(isset($tables['tx_testextension_test']));
-        $this->assertNotEquals('varchar(255)', strtolower($pagesFields['alias']['Type']));
+        $this->assertEquals(ColumnTypes::STRING, $pagesFields['alias']->getType()->getName());
+        $this->assertEquals(33, $pagesFields['alias']->getLength());
 
         // Assert that changes are reported:
         $this->assertContains('ALTER TABLE pages ADD tx_testextension_field_test', $result);
@@ -122,12 +128,14 @@ class DatabaseControllerTest extends FunctionalTestCase
         $result = $this->controller->updateStructureAction($arguments);
 
         // Assert that tables have been created:
-        $tables = $GLOBALS['TYPO3_DB']->admin_get_tables();
-        $pagesFields = $GLOBALS['TYPO3_DB']->admin_get_fields('pages');
+        $tables = $this->getTables();
+        $pagesFields = $this->getTableColumns('pages');
+
         $this->assertTrue(isset($tables['tx_testextension']));
         $this->assertTrue(isset($tables['tx_testextension_test']));
         $this->assertTrue(isset($pagesFields['tx_testextension_field_test']));
-        $this->assertEquals('varchar(255)', strtolower($pagesFields['alias']['Type']));
+        $this->assertEquals(ColumnTypes::STRING, $pagesFields['alias']->getType()->getName());
+        $this->assertEquals(255, $pagesFields['alias']->getLength());
 
         // Assert that nothing is reported we just want to execute:
         $this->assertEmpty($result);
@@ -149,9 +157,10 @@ class DatabaseControllerTest extends FunctionalTestCase
         $result = $this->controller->updateStructureAction($arguments);
 
         // Assert that nothing has been removed, this is just for reporting:
-        $tables = $GLOBALS['TYPO3_DB']->admin_get_tables();
+        $tables = $this->getTables();
         $this->assertTrue(isset($tables['tx_testextension']));
-        $pagesFields = $GLOBALS['TYPO3_DB']->admin_get_fields('pages');
+
+        $pagesFields = $this->getTableColumns('pages');
         $this->assertTrue(isset($pagesFields['tx_testextension_field']));
 
         // Assert that removals are reported:
@@ -175,9 +184,10 @@ class DatabaseControllerTest extends FunctionalTestCase
         $result = $this->controller->updateStructureAction($arguments);
 
         // Assert that tables and columns have been removed:
-        $tables = $GLOBALS['TYPO3_DB']->admin_get_tables();
+        $tables = $this->getTables();
         $this->assertFalse(isset($tables['tx_testextension']));
-        $pagesFields = $GLOBALS['TYPO3_DB']->admin_get_fields('pages');
+
+        $pagesFields = $this->getTableColumns('pages');
         $this->assertFalse(isset($pagesFields['tx_testextension_field']));
 
         // Assert that nothing is reported we just want to execute:
@@ -200,9 +210,10 @@ class DatabaseControllerTest extends FunctionalTestCase
         $result = $this->controller->updateStructureAction($arguments);
 
         // Assert that nothing has been removed, this is just for reporting:
-        $tables = $GLOBALS['TYPO3_DB']->admin_get_tables();
+        $tables = $this->getTables();
         $this->assertTrue(isset($tables['tx_testextension']));
-        $pagesFields = $GLOBALS['TYPO3_DB']->admin_get_fields('pages');
+
+        $pagesFields = $this->getTableColumns('pages');
         $this->assertTrue(isset($pagesFields['tx_testextension_field']));
 
         // Assert that removals are reported:
@@ -233,6 +244,7 @@ class DatabaseControllerTest extends FunctionalTestCase
 
         $this->assertFileExists($testDumpFile);
         $testDumpFileContent = file_get_contents($testDumpFile);
+
         // Assert that changes are dumped:
         $this->assertContains('ALTER TABLE pages ADD tx_testextension_field_test', $testDumpFileContent);
         $this->assertContains('ALTER TABLE pages CHANGE alias alias varchar(255)', $testDumpFileContent);
@@ -240,5 +252,33 @@ class DatabaseControllerTest extends FunctionalTestCase
 
         // Assert that dump result is reported:
         $this->assertNotEmpty($result);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getTables()
+    {
+        /** @var Connection $connection */
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionByName('Default');
+        $tables = $connection->getSchemaManager()->listTableNames();
+
+        return array_flip($tables);
+    }
+
+    /**
+     * @param string $table
+     * @return Column[]
+     */
+    private function getTableColumns(string $table)
+    {
+        /** @var Connection $connection */
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionByName('Default');
+        $tableColumns = [];
+        foreach ($connection->getSchemaManager()->listTableColumns($table) as $column) {
+            $tableColumns[$column->getName()] = $column;
+        }
+
+        return $tableColumns;
     }
 }

@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -244,8 +244,15 @@ class tx_t3deploy_databaseController
             $statements = $this->sortStatements($statements);
 
             if ($isExecuteEnabled) {
-                foreach ($statements as $statement) {
-                    $GLOBALS['TYPO3_DB']->admin_query($statement);
+                $res = $this->schemaMigrationService->performUpdateQueries(
+                    $statements,
+                    array_fill_keys(array_keys($statements), true)
+                );
+                if (is_array($res)) {
+                    throw new RuntimeException(
+                        'Database operation failure' . PHP_EOL . print_r($res, true) . PHP_EOL,
+                        1592989007
+                    );
                 }
             }
 

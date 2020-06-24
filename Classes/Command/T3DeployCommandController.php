@@ -4,7 +4,7 @@ namespace AOE\T3Deploy\Command;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2019 AOE GmbH <dev@aoe.com>
+ *  (c) 2020 AOE GmbH <dev@aoe.com>
  *
  *  All rights reserved
  *
@@ -26,6 +26,7 @@ namespace AOE\T3Deploy\Command;
  ***************************************************************/
 
 use AOE\T3Deploy\Utility\SqlStatementUtility;
+use RuntimeException;
 use TYPO3\CMS\Core\Category\CategoryRegistry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
@@ -239,8 +240,12 @@ class T3DeployCommandController extends CommandController
             $statements = SqlStatementUtility::sortStatements($statements);
 
             if ($isExecuteEnabled) {
-                foreach ($statements as $statement) {
-                    $GLOBALS['TYPO3_DB']->admin_query($statement);
+                $res = $this->schemaMigrationService->performUpdateQueries($statements, array_keys($statements));
+                if (is_array($res)) {
+                    throw new RuntimeException(
+                        'Database operation failure' . PHP_EOL . print_r($res, true) . PHP_EOL,
+                        1592990670
+                    );
                 }
             }
 

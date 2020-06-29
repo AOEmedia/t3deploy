@@ -24,6 +24,9 @@ matrix:
     - env: TYPO3_VERSION=dev-master COVERAGE=0 FUNCTIONAL=0
     - php: 7.3
 
+services:
+  - mysql
+
 notifications:
   email:
     # recipients:
